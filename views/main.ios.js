@@ -13,18 +13,20 @@ import React, {
   ScrollView,
 } from 'react-native';
 
-var setTimeBlockPage = require('./timeBlock.ios');
-var aboutAppPage = require('./aboutApp.ios');
-var settingsPage = require('./settingsPage.ios');
-var Swiper = require('react-native-swiper');
-var statsPage = require('./profilePage.ios');
+var setTimeBlockPage = require('./timeBlock.ios'),
+    settingsPage = require('./settingsPage.ios'), 
+    Swiper = require('react-native-swiper'), 
+    statsPage = require('./profilePage.ios'), 
+    store = require('react-native-simple-store')
+// Uncomment to re-set stats
 
-var store = require('react-native-simple-store')
 // store.delete('activitiesAmount')
 // store.delete('totalTimeWorked')
 // store.delete('totalBreakTime')
 // store.delete('totalCycles')
 // store.delete('activities')
+
+
 class Main extends Component {
 
   constructor() {

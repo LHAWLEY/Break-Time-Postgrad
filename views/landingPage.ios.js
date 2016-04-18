@@ -9,16 +9,16 @@ import React, {
   Image
 } from 'react-native';
 
-var Main = require('./main.ios');
+var Main = require('./main.ios')
 
-class LandingPage extends Component {
+var LandingPage = React.createClass({
 
 	GoToMain() {
 		this.props.navigator.resetTo({
       title: 'Main',
       component: Main,
     })
-	}
+	},
 
   render() {
   	console.log("Hi unicorns")
@@ -34,7 +34,7 @@ class LandingPage extends Component {
     	</TouchableWithoutFeedback>
     );
   }
-}
+})
 
 const styles = StyleSheet.create({
 	container: {

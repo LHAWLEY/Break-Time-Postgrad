@@ -10,13 +10,12 @@ import React, {
   TouchableHighlight,
 } from 'react-native';
 
-var Swiper = require('react-native-swiper');
-var store = require('react-native-simple-store');
-
-var totalTimeWorked;
-var totalBreakTime;
-var activitiesAmount;
-var totalCycles;
+var Swiper = require('react-native-swiper'),
+    store = require('react-native-simple-store'),
+    totalTimeWorked,
+    totalBreakTime,
+    activitiesAmount,
+    totalCycles
 
 var ProfilePage = React.createClass ({
   componentDidMount() {

@@ -12,17 +12,16 @@ import React, {
   NavigatorIOS
 } from 'react-native';
 
-var moment = require('moment');
-    store = require('react-native-simple-store');
-    TimePicker = require('./components/timePicker.ios');
-    Button = require('./components/button.ios');
-    Swiper = require('react-native-swiper');
-    TimerPage = require('./timer.ios');
-    TimerLogicPage = require('./timerlogic.ios');
-    ScrollableTabView = require('react-native-scrollable-tab-view');
-
-var indexContainer = [];
-var activityData;
+var moment = require('moment'),
+    store = require('react-native-simple-store'),
+    TimePicker = require('./components/timePicker.ios'),
+    Button = require('./components/button.ios'),
+    Swiper = require('react-native-swiper'),
+    TimerPage = require('./timer.ios'),
+    TimerLogicPage = require('./timerlogic.ios'),
+    ScrollableTabView = require('react-native-scrollable-tab-view'),
+    indexContainer = [],
+    activityData
 
 var TimeBlock = React.createClass({
 
@@ -56,12 +55,12 @@ var TimeBlock = React.createClass({
       fadeAnim: new Animated.Value(0),
 
       // TESTING TIMES
-      // worktime: '5',
-      // breaktime: '3',
+      worktime: '5',
+      breaktime: '3',
 
       // NORMAL TIMES
-      worktime: '15',
-      breaktime: '5',
+      // worktime: '15',
+      // breaktime: '5',
       activities: activityData,
       index: 0
     };
@@ -181,15 +180,6 @@ var TimeBlock = React.createClass({
           <Text style={styles.description1}>
             4. Start your timebox cycle
           </Text>
-        <TouchableHighlight 
-          style={styles.button} 
-          underlayColor='#9BE8FF' 
-          onPress={() => this.GoToTimerPage()}>
-          <Text
-            style={styles.buttonText}>
-            Timer
-          </Text>
-        </TouchableHighlight>
           <TouchableHighlight
             style={styles.button}
             underlayColor='#9BE8FF'
@@ -203,7 +193,6 @@ var TimeBlock = React.createClass({
 
       </View>
     </ScrollView>
-
     );
   }
 })
@@ -215,12 +204,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
+
   buttonContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
+
   timeContainer: {
     padding: 10,
     flex: 1,
@@ -233,6 +224,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 25,
   },
+
   description1: {
     textAlign: 'center',
     fontSize: 25,
@@ -240,9 +232,9 @@ const styles = StyleSheet.create({
     top: 27,
     paddingLeft: 40,
   },
+
   button: {
     backgroundColor: '#05B3DD',
-    // margin: 15,
     borderRadius: 8.150,
     width: 300,
     height: 45,
@@ -251,6 +243,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 2,
     },
+
   buttonText: {
     textAlign: 'center',
     margin: 10,
@@ -258,6 +251,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
   },
+
   buttonOff: {
     backgroundColor: '#BCC1C5',
     margin:15,
@@ -269,9 +263,11 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 2
     },
+
   picker: {
     width: 300
   },
+
   backgroundImage: {
     width: null,
     height: null,
@@ -279,18 +275,22 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center'
   },
+
   whiteText: {
     textAlign: 'center',
     fontSize: 30,
     fontWeight: 'bold',
     color: 'white',
   },
+
   background: {
     backgroundColor: '#F5FCFF',
   },
+
   customOptions: {
     marginTop: 30,
   },
+  
   footer: {
     flex: 1,
     fontSize: 25,

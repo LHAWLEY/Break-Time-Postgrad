@@ -11,14 +11,13 @@ import React, {
   Image,
 } from 'react-native';
 
-var profilePage = require('./profilePage.ios');
-var mainPage = require('./main.ios');
-var store = require('react-native-simple-store');
+var profilePage = require('./profilePage.ios'),
+    mainPage = require('./main.ios'),
+    store = require('react-native-simple-store'),
+    timeworked,
+    breakedtime
 
-var timeworked;
-var breakedtime;
-
-class Stats extends Component {
+var Stats = React.createClass({
 
   // constructor(props) {
   //   super(props);
@@ -65,21 +64,21 @@ class Stats extends Component {
       var newTotal = data += this.props.cycles
       store.save('totalCycles', newTotal)
     })
-  }
+  },
 
   GoToProfile() {
     this.props.navigator.push({
       title: 'Profile',
       component: profilePage
     })
-  }
+  },
 
   GoToMain() {
     this.props.navigator.popToTop()
-  }
+  },
 
-  timeworked = Math.floor((this.props.worktime * this.props.cycles));
-  breakedtime = Math.floor((this.props.breaktime * this.props.cycles));
+  // timeworked = Math.floor((this.props.worktime * this.props.cycles));
+  // breakedtime = Math.floor((this.props.breaktime * this.props.cycles));
   render(){
     return(
     <View style={styles.statsBackground}>
@@ -119,7 +118,7 @@ class Stats extends Component {
     </View>
     )
   }
-}
+})
 
 var styles = StyleSheet.create({
    statsBackground: {
