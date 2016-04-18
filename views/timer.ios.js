@@ -12,13 +12,11 @@ import React, {
 } from 'react-native';
 
 
-var CountDown = require('./timerlogic.ios');
-var TimeBlock = require('./timeBlock.ios');
+var CountDown = require('./timerlogic.ios'),
+    TimeBlock = require('./timeBlock.ios'),
+    exitTime
 
-var exitTime;
-class Timer extends Component {
-
-
+var Timer = React.createClass ({
   render(){
     return(
       <View style={styles.timerBackground}>
@@ -35,7 +33,7 @@ class Timer extends Component {
       </View>
     )
   }
-}
+})
 
 var styles = StyleSheet.create({
   timerBackground: {

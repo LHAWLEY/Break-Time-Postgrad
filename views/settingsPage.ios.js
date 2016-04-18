@@ -14,8 +14,8 @@ import React, {
   ScrollView,
 } from 'react-native';
 
-var store = require('react-native-simple-store');
-var Swipeout = require('react-native-swipeout');
+var store = require('react-native-simple-store'),
+    Swipeout = require('react-native-swipeout')
 
 var Settings = React.createClass ({
 

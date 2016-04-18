@@ -11,21 +11,19 @@ import React, {
     Vibration
 } from 'react-native';
 
-var moment = require('moment');
-var TimerMixin = require('react-timer-mixin');
-var AudioPlayer = require('react-native-audioplayer');
-var StatsPage = require('./stats.ios');
-
-var alertBreakMessage = 'Now take a well deserved break.',
+var moment = require('moment'),
+    TimerMixin = require('react-timer-mixin'),
+    AudioPlayer = require('react-native-audioplayer'),
+    StatsPage = require('./stats.ios'),
+    alertBreakMessage = 'Now take a well deserved break.',
     alertWorkMessage = 'Want to start another timeblock?',
-    alertMessage = 'Confirm exit';
+    alertMessage = 'Confirm exit'
 
 var CountDown = React.createClass({
   mixins: [TimerMixin],
 
   getInitialState: function () {
     return {
-
       workExpiry:  moment().add(this.props.worktime, 'seconds'),
       breakExpiry: moment().add(this.props.breaktime, 'seconds'),
       onBreak: false,
@@ -89,7 +87,7 @@ var CountDown = React.createClass({
     });
   },
 
-  getDuration: function (expiry) {
+  getDuration(expiry) {
     var milliseconds = expiry.diff(moment())
     return moment.duration(milliseconds);
   },
@@ -113,7 +111,6 @@ var CountDown = React.createClass({
       return this.getTimeLeft(minOrSec, this.state.workExpiry);
     }
   },
-
 
   GoToMainPage() {
     this.stopTimer()
@@ -172,15 +169,10 @@ var CountDown = React.createClass({
     })
 
     this.startTimer()
-
-    console.log('wexp2:' + this.state.workExpiry.format())
-    console.log('bexp2:' + this.state.breakExpiry.format())
     this.checkTimer();
   },
 
   checkTimer() {
-    console.log('wexp1:' + this.state.workExpiry.format())
-    console.log('bexp1:' + this.state.breakExpiry.format())
     switch (onBreak) {
       case true:
         if (moment().format() >= this.state.breakExpiry.format()) {
@@ -230,60 +222,46 @@ var CountDown = React.createClass({
     })
     this.GoToStatsPage();
   },
+  
   setBreak(){
-
     this.setState({
       // TESTING
-      // breakExpiry: moment().add(this.state.breakMin, 'seconds')
+      breakExpiry: moment().add(this.state.breakMin, 'seconds')
       // NORMAL
-      breakExpiry: moment().add(this.state.breakMin, 'minutes')
+      // breakExpiry: moment().add(this.state.breakMin, 'minutes')
     }),
     this.startTimer(),
     this.checkTimer()
   },
-  componentDidMount() {
 
-    // TESTING TIMES
-    // var workMin = 5,
-    //     breakMin = 3;
-
-    // // NORMAL TIMES
-    var workMin = this.props.workTime,
-        breakMin = this.props.breakTime;
-
-    this.setState({
-      workMin: workMin,
-      breakMin: breakMin,
-      // TESTING
-      // workExpiry: moment().add(workMin, 'seconds')
-      // NORMAL
-      workExpiry: moment().add(workMin, 'minutes')
-    })
-
-    this.startTimer();
-  },
   _update(){
     this.checkTimer();
   },
+  
   startTimer(){
     timeOn = setInterval(this._update, 1000);
   },
+
   stopTimer(){
     clearInterval(timeOn);
   },
+
   componentWillUnmount() {
     this.stopTimer();
     onBreak = false;
   },
-  getTimeLeft: function(expiry) {
-    var milliseconds = expiry.diff(moment())
-    return moment.duration(milliseconds);
-  },
-  getTimeToWorkExpiry: function() {
+
+  getTimeToWorkExpiry() {
     return this.getTimeLeft(this.state.workExpiry);
   },
-  getTimeToBreakExpiry: function() {
+
+  getTimeToBreakExpiry() {
     return this.getTimeLeft(this.state.breakExpiry);
+  },
+
+  getTimeLeft(expiry) {
+    var milliseconds = expiry.diff(moment())
+    return moment.duration(milliseconds);
   },
   renderStop() {
     return (
