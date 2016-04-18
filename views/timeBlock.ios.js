@@ -55,12 +55,12 @@ var TimeBlock = React.createClass({
       fadeAnim: new Animated.Value(0),
 
       // TESTING TIMES
-      // worktime: '5',
-      // breaktime: '3',
+      worktime: '5',
+      breaktime: '3',
 
       // NORMAL TIMES
-      worktime: '15',
-      breaktime: '5',
+      // worktime: '15',
+      // breaktime: '5',
       activities: activityData,
       index: 0
     };

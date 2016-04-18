@@ -148,25 +148,25 @@ var CountDown = React.createClass({
 
     // TESTING TIMES
 
-    //  var workMin = 5,
-    //     breakMin = 3;
-
-    // this.setState({
-    //   workMin: workMin,
-    //   breakMin: breakMin,
-    //   workExpiry: moment().add(workMin, 'seconds')
-    // })
-
-    // NORMAL CODE
-
-    var workMin = this.props.workTime,
-        breakMin = this.props.breakTime;
+     var workMin = 5,
+        breakMin = 3;
 
     this.setState({
       workMin: workMin,
       breakMin: breakMin,
-      workExpiry: moment().add(workMin, 'minutes')
+      workExpiry: moment().add(workMin, 'seconds')
     })
+
+    // NORMAL CODE
+
+    // var workMin = this.props.workTime,
+    //     breakMin = this.props.breakTime;
+
+    // this.setState({
+    //   workMin: workMin,
+    //   breakMin: breakMin,
+    //   workExpiry: moment().add(workMin, 'minutes')
+    // })
 
     this.startTimer()
     this.checkTimer();
@@ -260,8 +260,8 @@ var CountDown = React.createClass({
   },
 
   getTimeLeft(expiry) {
-    var milliseconds = expiry.diff(moment())
-    return moment.duration(milliseconds);
+    var milliseconds = expiry.diff(moment());
+    return moment.duration(milliseconds)
   },
   renderStop() {
     return (
