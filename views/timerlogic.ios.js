@@ -1,6 +1,3 @@
-// cannot receive alert when on home screen or in lock mode.  
-// if user comes back before time is up then they will receive the alert
-
 import React, {
     Alert,
     Image,
@@ -19,14 +16,16 @@ var TimerMixin = require('react-timer-mixin');
 var AudioPlayer = require('react-native-audioplayer');
 var StatsPage = require('./stats.ios');
 
-var alertBreakMessage = 'BREAK TIME !';
-var alertWorkMessage = 'get to work!!!!';
+var alertBreakMessage = 'Now take a well deserved break.',
+    alertWorkMessage = 'Want to start another timeblock?',
+    alertMessage = 'Confirm exit';
 
 var CountDown = React.createClass({
   mixins: [TimerMixin],
 
   getInitialState: function () {
     return {
+
       workExpiry:  moment().add(this.props.worktime, 'seconds'),
       breakExpiry: moment().add(this.props.breaktime, 'seconds'),
       onBreak: false,
@@ -37,11 +36,11 @@ var CountDown = React.createClass({
   componentDidMount(){
     this.interval = setInterval(function () {
       this._onTick();
-    }.bind(this), 1000); 
+    }.bind(this), 1000);
   },
 
   componentWillUnmount(){
-    clearInterval(this.interval); 
+    clearInterval(this.interval);
   },
 
   _onTick() {
@@ -115,15 +114,23 @@ var CountDown = React.createClass({
     }
   },
 
+
+  GoToMainPage() {
+    this.stopTimer()
+    this.props.navigator.popToTop()
+  },
+
   GoToStatsPage() {
     this.props.navigator.push({
       title: "Stats",
       component: StatsPage,
+      navigationBarHidden: true,
       passProps: {
         worktime: this.props.worktime,
         breaktime: this.props.breaktime,
         breakActivity: this.props.breakActivity,
         cycles: this.state.cycles
+
       }
     })
   },
@@ -139,7 +146,166 @@ var CountDown = React.createClass({
         </View>
       </View>
     )
-  }
+  },
+  setNewBlockCycle() {
+
+    // TESTING TIMES
+
+    //  var workMin = 5,
+    //     breakMin = 3;
+
+    // this.setState({
+    //   workMin: workMin,
+    //   breakMin: breakMin,
+    //   workExpiry: moment().add(workMin, 'seconds')
+    // })
+
+    // NORMAL CODE
+
+    var workMin = this.props.workTime,
+        breakMin = this.props.breakTime;
+
+    this.setState({
+      workMin: workMin,
+      breakMin: breakMin,
+      workExpiry: moment().add(workMin, 'minutes')
+    })
+
+    this.startTimer()
+
+    console.log('wexp2:' + this.state.workExpiry.format())
+    console.log('bexp2:' + this.state.breakExpiry.format())
+    this.checkTimer();
+  },
+
+  checkTimer() {
+    console.log('wexp1:' + this.state.workExpiry.format())
+    console.log('bexp1:' + this.state.breakExpiry.format())
+    switch (onBreak) {
+      case true:
+        if (moment().format() >= this.state.breakExpiry.format()) {
+          this.stopTimer();
+          onBreak = false;
+          Vibration.vibrate();
+          AudioPlayer.play('crabhorn.mp3');
+          Alert.alert(
+            'You look so refreshed!',
+            alertWorkMessage,
+            [
+              {text: 'Run another timeblock', onPress: () => this.setNewBlockCycle()},
+              {text: 'Finished', onPress: () => this.finished()}
+            ]
+          );
+        } else {
+          this.forceUpdate();
+        }
+        break;
+      case false:
+        if (moment().format() >= this.state.workExpiry.format()) {
+          this.state.cycles++;
+          onBreak = true;
+          Vibration.vibrate();
+          AudioPlayer.play('crabhorn.mp3');
+          this.stopTimer()
+          Alert.alert(
+            'Great job staying on task!',
+            alertBreakMessage,
+            [
+              {text: 'Take Break', onPress: () => this.setBreak()}
+            ]
+          );
+        } else {
+          this.forceUpdate();
+        }
+        break;
+    }
+  },
+  finished(){
+    var workMin = 1,
+        breakMin = 1;
+
+    this.setState({
+      workExpiry: moment().add(workMin, 'seconds'),
+      breakExpiry: moment().add(breakMin, 'seconds')
+    })
+    this.GoToStatsPage();
+  },
+  setBreak(){
+
+    this.setState({
+      // TESTING
+      // breakExpiry: moment().add(this.state.breakMin, 'seconds')
+      // NORMAL
+      breakExpiry: moment().add(this.state.breakMin, 'minutes')
+    }),
+    this.startTimer(),
+    this.checkTimer()
+  },
+  componentDidMount() {
+
+    // TESTING TIMES
+    // var workMin = 5,
+    //     breakMin = 3;
+
+    // // NORMAL TIMES
+    var workMin = this.props.workTime,
+        breakMin = this.props.breakTime;
+
+    this.setState({
+      workMin: workMin,
+      breakMin: breakMin,
+      // TESTING
+      // workExpiry: moment().add(workMin, 'seconds')
+      // NORMAL
+      workExpiry: moment().add(workMin, 'minutes')
+    })
+
+    this.startTimer();
+  },
+  _update(){
+    this.checkTimer();
+  },
+  startTimer(){
+    timeOn = setInterval(this._update, 1000);
+  },
+  stopTimer(){
+    clearInterval(timeOn);
+  },
+  componentWillUnmount() {
+    this.stopTimer();
+    onBreak = false;
+  },
+  getTimeLeft: function(expiry) {
+    var milliseconds = expiry.diff(moment())
+    return moment.duration(milliseconds);
+  },
+  getTimeToWorkExpiry: function() {
+    return this.getTimeLeft(this.state.workExpiry);
+  },
+  getTimeToBreakExpiry: function() {
+    return this.getTimeLeft(this.state.breakExpiry);
+  },
+  renderStop() {
+    return (
+      <View style={styles.stopContainer}>
+      <TouchableHighlight
+        style={styles.button}
+        underlayColor="#9BE8FF"
+        onPress={() => Alert.alert(
+          'Exit',
+          alertMessage,
+          [
+            {text: 'Yes', onPress: () => this.GoToMainPage()},
+            {text: 'No', onPress: () => console.log('no')}
+          ]
+          )}>
+        <Text style={styles.buttonText}>
+          Stop
+        </Text>
+      </TouchableHighlight>
+      </View>
+    )
+  },
 });
 
 var styles = StyleSheet.create({
@@ -149,20 +315,45 @@ var styles = StyleSheet.create({
     paddingBottom: 5
   },
   textStyle: {
-    color:'white',
+    color:'black',
     fontSize: 55
+  },
+   textStyle2: {
+    color:'black',
+    fontSize: 18,
   },
   wrapper: {
     padding: 10,
-    marginRight:10,
     width: 350,
     backgroundColor: '#e5e5e5',
   },
   buttonStyle: {
     padding:20,
-    backgroundColor: '#05B3DD',
+    backgroundColor: 'white',
+    opacity: 0.85,
     borderRadius: 8
-  }
+  },
+  button: {
+    backgroundColor: '#05B3DD',
+    margin: 15,
+    borderRadius: 8.150,
+    width: 300,
+    height: 45,
+    shadowColor: 'black',
+    shadowOpacity: 0.3,
+    shadowOffset: {width: 0, height: 3},
+    shadowRadius: 2
+  },
+  buttonText: {
+    textAlign: 'center',
+    margin: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  stopContainer: {
+    marginLeft: 10,
+  },
 });
 
 module.exports = CountDown;

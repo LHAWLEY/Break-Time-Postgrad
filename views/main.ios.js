@@ -1,6 +1,8 @@
 import React, {
   Alert,
+  AsyncStorage,
   AppRegistry,
+  Animated,
   Component,
   StyleSheet,
   TouchableHighlight,
@@ -8,49 +10,108 @@ import React, {
   Image,
   View,
   NavigatorIOS,
+  ScrollView,
 } from 'react-native';
 
-
-var TimeBlockSet = require('./timeBlockSetSuccessPage.ios');
 var setTimeBlockPage = require('./timeBlock.ios');
 var aboutAppPage = require('./aboutApp.ios');
-var setTimeBlockPage = require('./timeBlock.ios');
-var profilePage = require('./profilePage.ios');
+var settingsPage = require('./settingsPage.ios');
 var Swiper = require('react-native-swiper');
+var statsPage = require('./profilePage.ios');
 
-
+var store = require('react-native-simple-store')
+// store.delete('activitiesAmount')
+// store.delete('totalTimeWorked')
+// store.delete('totalBreakTime')
+// store.delete('totalCycles')
+// store.delete('activities')
 class Main extends Component {
 
-	GoToAboutApp() {
+  constructor() {
+    super();
+      this.state = {
+      fadeAnim: new Animated.Value(0),
+    };
+  }
+
+  componentDidMount() {
+    // Fade-in animation
+    Animated.timing(          
+       this.state.fadeAnim,   
+       {toValue: 1,
+        duration: 900},           
+     ).start()
+
+    // Async Storage
+    store.get('activities').then((data) => {
+      if (data !== null){
+        this.setState({activities: data})
+      } else {
+        this.setState({activities: ["Go for a walk", "Go for a run", "Sashay away", "Have a snack", "Play music"]});
+        store.save('activities', ["Go for a walk", "Go for a run", "Sashay away", "Have a snack", "Play music"])
+      }
+    });
+    store.get('totalTimeWorked').then((data) => {
+      if (data === null){
+        store.save('totalTimeWorked', 0)
+      }
+    });
+    store.get('totalBreakTime').then((data) => {
+      if (data === null){
+        store.save('totalBreakTime', 0)
+      }
+    });
+    store.get('activitiesAmount').then((data) => {
+      if (data === null || Object.keys(data).length === 0){
+        store.save('activitiesAmount', [{}] )
+      }
+    });
+    store.get('totalCycles').then((data) => {
+      if (data === null){
+        store.save('totalCycles', 0)
+      }
+    });
+
+  }
+
+  GoToAboutApp() {
+    this.props.navigator.push({
+      title: 'About',
+      component: aboutAppPage
+    })
+  }
+
+  GoToSetTimeBlock() {
+    this.props.navigator.push({
+      title: 'Set Time Block',
+      component: setTimeBlockPage
+    })
+  }
+
+	GoToSettings() {
 		this.props.navigator.push({
-			title: 'About',
-			component: aboutAppPage
+			title: 'Settings',
+			component: settingsPage
 		})
 	}
 
-	GoToSetTimeBlock() {
-		this.props.navigator.push({
-			title: 'Set Time Block',
-			component: setTimeBlockPage
-		})
-	}
+  GoToStats() {
+    this.props.navigator.push({
+      title: 'Statistics',
+      component: statsPage
+    })
+  }
 
-	GoToProfile() {
-		this.props.navigator.push({
-			title: 'Profile',
-			component: profilePage
-		})
-	}
-
-	render() {
+  render() {
     return (
-			<View style={styles.container}>
-				<Swiper style={styles.wrapper} height={225} horizontal={true} autoplay={false}>
-						<Image source={require('../imgs/BreakTime.jpeg')} style={styles.backgroundImage} >
-		  			<Text style={styles.mainTitle}>
-		    			Break Time
-		  			</Text>
-		  			</Image>
+      <Animated.View style={[styles.container, {opacity: this.state.fadeAnim}]}>
+        <View style={styles.header}>
+        <Swiper style={styles.wrapper} height={225} horizontal={true} autoplay={false} showsPagination={true}>
+            <Image source={require('../imgs/BreakTime.jpeg')} style={styles.backgroundImage} >
+            <Text style={styles.mainTitle}>
+              Break Time
+            </Text>
+            </Image>
 
             <Image source={require('../imgs/bikeride.jpeg')} style={styles.backgroundImage} >
             <Text style={styles.whiteText}>
@@ -58,45 +119,43 @@ class Main extends Component {
             </Text>
             </Image>
 
-            <Image source={require('../imgs/focus.jpeg')} style={styles.backgroundImage} >
+            <Image source={require('../imgs/productivity.jpg')} style={styles.backgroundImage} >
             <Text style={styles.whiteText}>
-              Increase your producivity.
+              Increase productivity.
             </Text>
             </Image>
-		  	</Swiper>
-		  	<Text>
-		  		{}
-		  	</Text>
-			  <View style={styles.buttonsContainer}>
-			    <TouchableHighlight 
-            style={styles.button} 
-            underlayColor={'#9BE8FF'} 
-            onPress={() => this.GoToSetTimeBlock()}>
-			      <Text style={styles.buttonText}>
-			        Set Time Block
-			      </Text>
-			    </TouchableHighlight>
-			    <TouchableHighlight
-			    	style={styles.button}
-			    	underlayColor={'#9BE8FF'}
-			    	onPress={() => this.GoToProfile()}>
-			      <Text style={styles.buttonText}>
-			        View Profile
-			      </Text>
-			    </TouchableHighlight>
+        </Swiper>
         </View>
+          <View style={styles.buttonsContainer}>
+          <TouchableHighlight
+            style={styles.button}
+            underlayColor={'#9BE8FF'}
+            onPress={() => this.GoToSetTimeBlock()}>
+            <Text style={styles.buttonText}>
+              Set Time Block
+            </Text>
+          </TouchableHighlight>
 
-			  <TouchableHighlight
-			  	style={styles.aboutButton}
-          underlayColor={'transparent'}
-			    onPress={() =>
-			   	this.GoToAboutApp()}>
-			    <Text style={styles.aboutLink} >
-			    	Learn More
-			    </Text>
-			  </TouchableHighlight>
-			</View>
-		);
+          <TouchableHighlight
+            style={styles.button}
+            underlayColor={'#9BE8FF'}
+            onPress={() => this.GoToStats()}>
+            <Text style={styles.buttonText}>
+              Timeboxing Stats
+            </Text>
+          </TouchableHighlight>
+
+          <TouchableHighlight
+            style={styles.button}
+            underlayColor={'#9BE8FF'}
+            onPress={() => this.GoToSettings()}>
+            <Text style={styles.buttonText}>
+              Activity Settings
+            </Text>
+          </TouchableHighlight>
+          </View>
+      </Animated.View>
+    );
   }
 }
 
@@ -107,24 +166,27 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F2F2F2',
   },
+  header: {
+    top: 0
+  },
   mainTitle: {
-    fontSize: 20,
+    fontSize: 30,
     textAlign: 'center',
     margin: 15,
+    fontWeight: 'bold',
   },
   whiteText: {
-    paddingLeft: 10,
-    fontSize: 20,
+    textAlign: 'center',
+    fontSize: 30,
     color: 'white',
+    fontWeight: 'bold',
   },
   buttonText: {
     textAlign: 'center',
-    margin: 15
-  },
-  aboutButton: {
-  	position: 'absolute',
-  	bottom: 30,
-  	right: 30
+    margin: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
   },
   aboutLink: {
     textAlign: 'center',
@@ -135,42 +197,38 @@ const styles = StyleSheet.create({
     borderRadius: 8.150,
     width: 300,
     height: 45,
+    shadowColor: 'black',
+    shadowOpacity: 0.3,
+    shadowOffset: {width: 0, height: 3},
+    shadowRadius: 2
   },
   buttonsContainer: {
-    position: 'relative',
+    marginBottom: 25,
   },
   instructions: {
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5,
   },
-  wrapper: {
-  	// flex: 1,
-  	// justifyContent: 'center',
-  },
   backgroundImage: {
-  	// width: 300,
-  	width: null,
-  	height: null,
-  	flex: 1,
-  	resizeMode: 'cover',
-  	justifyContent: 'center'
-  },
-  slide1: {
-  	alignItems: 'center',
-  	flex: 1,
-  	justifyContent: 'center',
-  },
-  slide2: {
-  	flex: 1,
-  	justifyContent: 'center',
-  	backgroundColor: '#29D9C2',
-  },
-  slide3: {
+    width: null,
+    height: null,
     flex: 1,
-    justifyContent: 'center',
-    backgroundColor: '#BDF271',
+    resizeMode: 'cover',
+    justifyContent: 'center'
   },
+  aboutButtonText: {
+    fontSize: 20,
+    textDecorationLine: 'underline',
+  },
+  logo: {
+    height: 85,
+    width: 85,
+  },
+  logoContainer: {
+    marginTop: 10,
+    alignItems: 'center',
+  }
 });
 
 module.exports = Main;

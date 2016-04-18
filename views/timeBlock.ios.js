@@ -1,23 +1,43 @@
 import React, {
   ScrollView,
+  AsyncStorage,
+  Animated,
   Component,
   StyleSheet,
   Text,
   View,
-  TouchableHighlight, 
+  TouchableHighlight,
   Picker,
   Image,
   NavigatorIOS
 } from 'react-native';
 
-var moment = require('moment')
-var TimePicker = require('./components/timePicker.ios');
-var Button = require('./components/button.ios');
-var Swiper = require('react-native-swiper');
-var TimerPage = require('./timer.ios');
-var TimerLogicPage = require('./timerlogic.ios')
+var moment = require('moment');
+    store = require('react-native-simple-store');
+    TimePicker = require('./components/timePicker.ios');
+    Button = require('./components/button.ios');
+    Swiper = require('react-native-swiper');
+    TimerPage = require('./timer.ios');
+    TimerLogicPage = require('./timerlogic.ios');
+    ScrollableTabView = require('react-native-scrollable-tab-view');
+
+var indexContainer = [];
+var activityData;
 
 var TimeBlock = React.createClass({
+
+  componentDidMount() {
+    store.get('activities').then((data) => {
+      this.setState({activities: data, breakActivity: data[0]});
+      activityData = data;
+    });
+
+    Animated.timing(
+       this.state.fadeAnim,
+       {toValue: 1,
+        duration: 3000},
+     ).start()
+  },
 
   GoToTimerPage() {
     this.props.navigator.push({
@@ -31,21 +51,18 @@ var TimeBlock = React.createClass({
     })
   },
 
-  GoToTimerLogicPage() {
-    this.props.navigator.push({
-      title: "Timer Logic",
-      component: TimerLogicPage,
-      passProps: {
-      breakActivity: this.state.breakActivity
-      }
-    })
-  },
-
   getInitialState() {
     return {
-      worktime: 15,
-      breaktime: 10,
-      breakActivity: 'run',
+      fadeAnim: new Animated.Value(0),
+
+      // TESTING TIMES
+      // worktime: '5',
+      // breaktime: '3',
+
+      // NORMAL TIMES
+      worktime: '15',
+      breaktime: '5',
+      activities: activityData,
       index: 0
     };
   },
@@ -72,41 +89,63 @@ var TimeBlock = React.createClass({
   },
 
   render() {
+    if (this.state.activities !== undefined) {
+      var activitiesList = this.state.activities.map(function(activity, i) {
+        return(
+          <Picker.Item key={i} label={activity} value={activity} />
+        )
+      })
+    } else {
+      var activitiesList = []
+    }
     return (
 
-    <ScrollView style={styles.wrapper} bounces={true} horizontal={false}>
+    <ScrollView style={styles.wrapper1} bounces={true} horizontal={false}>
       <View style={styles.container}>
-        <Swiper style={styles.wrapper} height={225} horizontal={true} autoplay={false} >
+        <Swiper style={styles.wrapper} height={275} horizontal={true} autoplay={false} showsPagination={true}>
+            <Image source={require('../imgs/wide-workstation.jpg')} style={styles.backgroundImage} >
+              <Text style={styles.whiteText}>
+                work.
+              </Text>
+            </Image>
             <Image source={require('../imgs/run.jpeg')} style={styles.backgroundImage} >
-            <Text style={styles.whiteText}>
-              run.
-            </Text>
+              <Text style={styles.whiteText}>
+                run.
+              </Text>
             </Image>
 
             <Image source={require('../imgs/yoga.jpg')} style={styles.backgroundImage} >
-            <Text style={styles.whiteText}>
-              do yoga.
-            </Text>
+              <Text style={styles.whiteText}>
+                do yoga.
+              </Text>
             </Image>
 
-            <Image source={require('../imgs/weights.jpg')} style={styles.backgroundImage} >
-            <Text style={styles.whiteText}>
-              lift weights.
-            </Text>
+            <Image source={require('../imgs/music.jpg')} style={styles.backgroundImage} >
+              <Text style={styles.whiteText}>
+                play music.
+              </Text>
+            </Image>
+
+            <Image source={require('../imgs/snackbreak.jpg')} style={styles.backgroundImage} >
+              <Text style={styles.whiteText}>
+                eat snacks.
+              </Text>
             </Image>
         </Swiper>
       </View>
-      <View style={styles.container}>
-        <Swiper style={styles.wrapper} height={300} horizontal={true} index={this.state.index} loop={false}>
+
+      <View style={styles.timeContainer}>
+        <Swiper style={styles.wrapper} showsButtons={true} height={300} horizontal={true} index={this.state.index} loop={false}>
         <View style={styles.container}>
           <Text style={styles.description}>
-            Set Work Time Block
+            1. Set Work Time Block
           </Text>
         <Picker
           style={styles.picker}
           selectedValue={this.state.worktime}
           onValueChange={this.updateWorktime}>
           <Picker.Item label='15 Minutes' value='15' />
+          <Picker.Item label='25 Minutes' value='25' />
           <Picker.Item label='30 Minutes' value='30' />
           <Picker.Item label='45 Minutes' value='45' />
           <Picker.Item label='60 Minutes' value='60' />
@@ -114,7 +153,7 @@ var TimeBlock = React.createClass({
         </View>
         <View style={styles.container}>
         <Text style={styles.description}>
-          Set Break Time Block
+          2. Set Break Time Block
         </Text>
         <Picker
           style={styles.picker}
@@ -127,36 +166,21 @@ var TimeBlock = React.createClass({
         </Picker>
         </View>
         <View style={styles.container}>
-        <Text style={styles.description}>
-          Choose a break activity.
-        </Text>
-        <Picker
-          style={styles.picker}
-          selectedValue={this.state.breakActivity}
-          onValueChange={this.updateBreakActivity}>
-          <Picker.Item label='run' value='run' />
-          <Picker.Item label='walk' value='walk' />
-          <Picker.Item label='bike' value='bike' />
-          <Picker.Item label='yoga' value='yoga' />
-          <Picker.Item label='weights' value='liftWeights' />
-          <Picker.Item label='push ups' value='pushUps' />
-          <Picker.Item label='sashay away' value='sashayAway' />
-        </Picker>
-        </View>
-        </Swiper>
-
-      </View>
-      <View style={styles.container}>
-        <TouchableHighlight 
-          style={styles.button} 
-          underlayColor='#9BE8FF' 
-          onPress={() => this.GoToTimerPage()}>
-          <Text
-            style={styles.buttonText}>
-            Start
+          <Text style={styles.description}>
+            3. Choose a break activity
           </Text>
-        </TouchableHighlight>
+          <Picker
+            style={styles.picker}
+            selectedValue={this.state.breakActivity}
+            onValueChange={this.updateBreakActivity}>
+            {activitiesList}
+          </Picker>
+        </View>
 
+        <View style={styles.buttonContainer}>
+          <Text style={styles.description1}>
+            4. Start your timebox cycle
+          </Text>
         <TouchableHighlight 
           style={styles.button} 
           underlayColor='#9BE8FF' 
@@ -166,6 +190,17 @@ var TimeBlock = React.createClass({
             Timer
           </Text>
         </TouchableHighlight>
+          <TouchableHighlight
+            style={styles.button}
+            underlayColor='#9BE8FF'
+            onPress={() => this.GoToTimerPage()}>
+            <Text style={styles.buttonText}>
+              Start
+            </Text>
+          </TouchableHighlight>
+        </View>
+        </Swiper>
+
       </View>
     </ScrollView>
 
@@ -180,20 +215,59 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
   },
+  buttonContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+  timeContainer: {
+    padding: 10,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F5FCFF',
+  },
+
   description: {
     textAlign: 'center',
-    fontSize: 20 
+    fontSize: 25,
+  },
+  description1: {
+    textAlign: 'center',
+    fontSize: 25,
+    position: 'absolute',
+    top: 27,
+    paddingLeft: 40,
   },
   button: {
-     backgroundColor: '#05B3DD',
-      margin: 15,
-      borderRadius: 8.150,
-      width: 300,
-      height: 45 
+    backgroundColor: '#05B3DD',
+    // margin: 15,
+    borderRadius: 8.150,
+    width: 300,
+    height: 45,
+    shadowColor: 'black',
+    shadowOpacity: 0.3,
+    shadowOffset: {width: 0, height: 3},
+    shadowRadius: 2,
     },
-      buttonText: {
-        textAlign: 'center',
-        margin: 15
+  buttonText: {
+    textAlign: 'center',
+    margin: 10,
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  buttonOff: {
+    backgroundColor: '#BCC1C5',
+    margin:15,
+    borderRadius: 8.150,
+    width: 300,
+    height: 45,
+    shadowColor: 'black',
+    shadowOpacity: 0.3,
+    shadowOffset: {width: 0, height: 3},
+    shadowRadius: 2
     },
   picker: {
     width: 300
@@ -205,12 +279,24 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center'
   },
-   whiteText: {
+  whiteText: {
     textAlign: 'center',
-    fontSize: 20,
+    fontSize: 30,
+    fontWeight: 'bold',
     color: 'white',
   },
+  background: {
+    backgroundColor: '#F5FCFF',
+  },
+  customOptions: {
+    marginTop: 30,
+  },
+  footer: {
+    flex: 1,
+    fontSize: 25,
+    textAlign: 'center',
+    backgroundColor: '#BCC1C5',
+  },
 });
-
 
 module.exports = TimeBlock;
