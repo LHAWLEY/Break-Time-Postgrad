@@ -12,15 +12,14 @@ import React, {
   NavigatorIOS
 } from 'react-native';
 
-
 var moment = require('moment');
-var store = require('react-native-simple-store');
-var TimePicker = require('./components/timePicker.ios');
-var Button = require('./components/button.ios');
-var Swiper = require('react-native-swiper');
-var TimerPage = require('./timer.ios');
-var TimerLogicPage = require('./timerlogic.ios');
-var ScrollableTabView = require('react-native-scrollable-tab-view');
+    store = require('react-native-simple-store');
+    TimePicker = require('./components/timePicker.ios');
+    Button = require('./components/button.ios');
+    Swiper = require('react-native-swiper');
+    TimerPage = require('./timer.ios');
+    TimerLogicPage = require('./timerlogic.ios');
+    ScrollableTabView = require('react-native-scrollable-tab-view');
 
 var indexContainer = [];
 var activityData;
@@ -182,6 +181,15 @@ var TimeBlock = React.createClass({
           <Text style={styles.description1}>
             4. Start your timebox cycle
           </Text>
+        <TouchableHighlight 
+          style={styles.button} 
+          underlayColor='#9BE8FF' 
+          onPress={() => this.GoToTimerPage()}>
+          <Text
+            style={styles.buttonText}>
+            Timer
+          </Text>
+        </TouchableHighlight>
           <TouchableHighlight
             style={styles.button}
             underlayColor='#9BE8FF'
@@ -191,8 +199,8 @@ var TimeBlock = React.createClass({
             </Text>
           </TouchableHighlight>
         </View>
-
         </Swiper>
+
       </View>
     </ScrollView>
 

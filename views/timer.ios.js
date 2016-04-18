@@ -18,17 +18,8 @@ var TimeBlock = require('./timeBlock.ios');
 var exitTime;
 class Timer extends Component {
 
-  componentDidMount() {
-    // AppStateIOS.addEventListener('change', this.SaveTime);
-  }
-
-  // ListenForStatusChange() {
-  //   AppStateIOS.addEventListener('change', SaveTime());
-  // }
 
   render(){
-    // console.log(this.componentDidMount());
-    // console.log(exitTime);
     return(
       <View style={styles.timerBackground}>
         <Image source={require('../imgs/coffeebreak.jpg')} style={styles.backgroundImage}>
