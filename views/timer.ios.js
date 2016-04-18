@@ -25,8 +25,8 @@ class Timer extends Component {
         <CountDown
           text={"Remaining Time"}
           breakActivity={this.props.breakActivity}
-          breakTime={this.props.breaktime}
-          workTime={this.props.worktime}
+          breaktime={this.props.breaktime}
+          worktime={this.props.worktime}
           navigator = {this.props.navigator}
         />
         <TouchableHighlight
