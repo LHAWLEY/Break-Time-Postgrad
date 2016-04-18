@@ -21,7 +21,6 @@ var LandingPage = React.createClass({
 	},
 
   render() {
-  	console.log("Hi unicorns")
     return (   
   		<TouchableWithoutFeedback onPress={() => this.GoToMain()}>
   			<View style={styles.container}>
