@@ -1,17 +1,10 @@
 import React, {
-  AppRegistry,
-  AsyncStorage,
-  Component,
-  StyleSheet,
-  TouchableHighlight,
-  TouchableOpacity,
-  Text,
-  Image,
   View,
-  ListView,
-  NavigatorIOS,
+  Text,
   TextInput,
+  TouchableHighlight,
   ScrollView,
+    StyleSheet
 } from 'react-native';
 
 var store = require('react-native-simple-store'),
@@ -60,7 +53,7 @@ var Settings = React.createClass ({
         backgroundColor: '#FF5347',
         underlayColor: 'white',
         text: 'Delete',
-        onPress: ()=>that.deleteData(i),
+        onPress: ()=>that.deleteData(i)
       }
     ]};
     return(
@@ -73,57 +66,37 @@ var Settings = React.createClass ({
       </View>
     )
     });
+
     return(
       <View style={styles.container}>
-          <Text style={styles.title}>
-            Customize Your Breaks
-          </Text>
-          <View style={styles.flowRight}>
-            <TextInput
-              ref={'textInput'}
-              style={styles.searchInput}
-              onChangeText={(text) => this.setState({text})} 
-              placeholder={this.state.text}/>
-            <TouchableHighlight style={styles.addButton} 
-              underlayColor={'#C0C0C0'} 
-              onPress={() => this.saveData(this.state.text)}>
-              <Text style={styles.buttonText2}>+</Text>
-            </TouchableHighlight>
-          </View>
-          <Text style={styles.delete}>Swipe left to delete</Text>
-          <ScrollView style={styles.wrapper} bounces={true} horizontal={false}>
-            <View style={styles.activityListWrapper}>
-              {activities}
-            </View>
-          </ScrollView>
-          <TouchableHighlight 
-            style={styles.button2} 
-            underlayColor={'#9BE8FF'} 
-            onPress={() => this.popToTop()}>
-            <Text style={styles.buttonText2}>
-              Main Page
-            </Text>
+        <Text style={styles.title}>
+          Customize Your Breaks
+        </Text>
+        <View style={styles.flowRight}>
+          <TextInput
+            ref={'textInput'}
+            style={styles.searchInput}
+            onChangeText={(text) => this.setState({text})}
+            placeholder={this.state.text}/>
+          <TouchableHighlight
+            style={[styles.button, styles.addButton]}
+            onPress={() => this.saveData(this.state.text)}>
+            <Text style={styles.buttonText}>+</Text>
           </TouchableHighlight>
+        </View>
+        <Text style={styles.deleteText}>Swipe left to delete</Text>
+        <ScrollView style={styles.wrapper} bounces={true} horizontal={false}>
+          <View style={styles.activityListWrapper}>{activities}</View>
+        </ScrollView>
       </View>
       )
     }
   });
 
-const styles = StyleSheet.create({
-  settingsBackground: {
-    flex: 1,
-    justifyContent: 'space-around',
-    alignItems: 'center',
-  },
+var styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#F2F2F2'
-  },
-  backgroundImage: {
-    flex: 1,
-    resizeMode: 'contain',
   },
   title: {
     marginTop: 100,
@@ -131,35 +104,14 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     color: 'black',
-    backgroundColor: 'transparent',
   },
   wrapper: {
-    alignSelf: 'stretch',
-    backgroundColor: 'transparent',
     marginTop: -10,
+    marginBottom: 40
   },
-   flowRight: {
+  flowRight: {
     flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'stretch',
-    padding: 20,
-  },
-  buttonText: {
-    fontSize: 18,
-    color: 'white',
-    alignSelf: 'center'
-  },
-  button: {
-    height: 36,
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: '#48BBEC',
-    borderColor: '#48BBEC',
-    borderWidth: 1,
-    borderRadius: 8,
-    marginBottom: 10,
-    alignSelf: 'stretch',
-    justifyContent: 'center'
+    padding: 20
   },
   searchInput: {
     height: 45,
@@ -174,45 +126,22 @@ const styles = StyleSheet.create({
     textAlign:'left',
     backgroundColor: 'white'
   },
-  // textInputWrapper: {
- //    flex: 1,
-  //  backgroundColor: '#05B3DD',
-  //  height: 100,
-  //  justifyContent: 'center',
-  //  alignItems: 'center',
-  //  alignSelf: 'stretch',
- //    flexDirection: 'row',
- //    paddingRight: 30
-  // },
-  addButton: {
-    backgroundColor: '#05B3DD',
-    borderRadius: 8.150,
+  button: {
     width: 45,
     height: 45,
+    backgroundColor: '#05B3DD',
+    borderRadius: 8.150,
     shadowColor: 'black',
     shadowOpacity: 0.3,
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 2
   },
-  button2: {
-    backgroundColor: '#05B3DD',
-    // margin: 15,
-    borderRadius: 8.150,
-    width: 300,
-    height: 45,
-    shadowColor: 'black',
-    shadowOpacity: 0.3,
-    shadowOffset: {width: 0, height: 3},
-    shadowRadius: 2,
-    alignSelf: 'center',
-    margin: 45
-  },
-  buttonText2: {
+  buttonText: {
     textAlign: 'center',
     margin: 10,
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white',
+    color: 'white'
   },
   li: {
     backgroundColor: '#fff',
@@ -221,29 +150,27 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     paddingLeft: 16,
     paddingTop: 14,
-    paddingBottom: 16,
+    paddingBottom: 16
   },
   liContainer: {
-    flex: 2,
+    flex: 2
   },
   liText: {
     textAlign: 'center',
     color: 'black',
-    fontSize: 20,
+    fontSize: 20
   },
-  delete: {
+  deleteText: {
     textAlign: 'center',
     fontSize: 15,
     fontWeight: 'bold',
     marginBottom: 10,
-    alignSelf:'stretch',
-    color: 'black',
-    backgroundColor: 'transparent'
+    color: 'black'
   },
   activityListWrapper: {
     opacity: 1,
     marginTop: -50,
-    backgroundColor: 'gray',
+    backgroundColor: 'gray'
   }
 })
 

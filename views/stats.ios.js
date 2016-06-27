@@ -1,14 +1,9 @@
 import React, {
-  AppRegistry,
-  AsyncStorage,
-  Animated,
-  Component,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
   View,
-  NavigatorIOS,
   Image,
+  Text,
+  TouchableHighlight,
+  StyleSheet
 } from 'react-native';
 
 var profilePage = require('./profilePage.ios'),
@@ -19,29 +14,8 @@ var profilePage = require('./profilePage.ios'),
 
 var Stats = React.createClass({
 
-  // constructor(props) {
-  //   super(props);
-  //     this.state = {
-  //     fadeAnim: new Animated.Value(0),
-  //   };
-  // }
-
-  // getInitialState() {
-  //   return {
-  //     fadeAnim: new Animated.Value(0),
-  //   };
-  // }
-
   componentDidMount(){
-    // Fade-in animation
-    // Animated.timing(          
-    //    this.state.fadeAnim,   
-    //    {toValue: 1,
-    //     delay: 1500,
-    //     duration: 900},           
-    //  ).start();
 
-    var that = this
     store.get('totalTimeWorked').then((data) => {
       var newTotal = data += Math.floor((this.props.worktime * this.props.cycles))
       store.save('totalTimeWorked', newTotal)
@@ -93,24 +67,14 @@ var Stats = React.createClass({
           <Text style={styles.statText}>{this.props.breakActivity}</Text>
         </View>
 
-        
 
-        <View style={styles.buttonsContainer}>
-          <TouchableHighlight
-            onPress={() => this.GoToProfile()}
-            style={styles.button}
-            underlayColor='#9BE8FF'>
-            <Text style={styles.buttonText}>
-              View Stats
-            </Text>
-          </TouchableHighlight>
+
+        <View>
           <TouchableHighlight
             onPress={() => this.GoToMain()}
             style={styles.button}
             underlayColor='#9BE8FF'>
-            <Text style={styles.buttonText}>
-              Main Page
-            </Text>
+            <Text style={styles.buttonText}>Main Page</Text>
           </TouchableHighlight>
         </View>
       </View>
@@ -159,20 +123,17 @@ var styles = StyleSheet.create({
     fontSize: 22,
     paddingTop: 7,
   },
-  buttonsContainer: {
-
-  },
-  button: {
-    backgroundColor: '#05B3DD',
-    margin: 15,
-    borderRadius: 8.150,
-    width: 300,
-    height: 45,
-    shadowColor: 'black',
-    shadowOpacity: 0.3,
-    shadowOffset: {width: 0, height: 3},
-    shadowRadius: 2
-  },
+  // button: {
+  //   backgroundColor: '#05B3DD',
+  //   margin: 15,
+  //   borderRadius: 8.150,
+  //   width: 300,
+  //   height: 45,
+  //   shadowColor: 'black',
+  //   shadowOpacity: 0.3,
+  //   shadowOffset: {width: 0, height: 3},
+  //   shadowRadius: 2
+  // },
   buttonText: {
     textAlign: 'center',
     margin: 10,

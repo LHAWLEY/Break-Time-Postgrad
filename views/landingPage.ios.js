@@ -1,55 +1,45 @@
 import React, {
-  AppRegistry,
-  Component,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  View,
   TouchableWithoutFeedback,
-  Image
+  View,
+  Image,
+  Text,
+  StyleSheet
 } from 'react-native';
-
-var Main = require('./main.ios')
 
 var LandingPage = React.createClass({
 
 	GoToMain() {
 		this.props.navigator.resetTo({
       title: 'Main',
-      component: Main,
+      component: require('./main.ios')
     })
 	},
 
   render() {
-  	console.log("Hi unicorns")
-    return (   
+    return (
   		<TouchableWithoutFeedback onPress={() => this.GoToMain()}>
-  			<View style={styles.container}>
-      		<Image source={require('../imgs/clock.png')} style={styles.landing}>
-      		</Image>
-      		<Text style={styles.text}>
-      			Break Time
-      		</Text>
+  			<View style={[styles.reset, styles.container]}>
+      		<Image source={require('../imgs/clock.png')} style={[styles.reset, styles.landing]}></Image>
+      		<Text style={styles.text}>Break Time</Text>
       	</View>
     	</TouchableWithoutFeedback>
     );
   }
 })
 
-const styles = StyleSheet.create({
+var styles = StyleSheet.create({
+  reset: {
+    flex: 1,
+    backgroundColor: '#05B3DD'
+  },
 	container: {
-		flex: 1,
-		backgroundColor: '#05B3DD',
 		alignItems: 'center'
-
 	},
   landing: {
   	width: 150,
   	height: 150,
-    flex: 1,
     marginTop: 200,
-    resizeMode: 'contain',
-    backgroundColor: '#05B3DD',
+    resizeMode: 'contain'
   },
   text: {
   	marginBottom: 250,

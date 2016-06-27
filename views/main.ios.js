@@ -1,22 +1,13 @@
 import React, {
-  Alert,
-  AsyncStorage,
-  AppRegistry,
   Animated,
-  Component,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  Image,
   View,
-  NavigatorIOS,
-  ScrollView,
+  Image,
+  Text,
+  TouchableHighlight,
+  StyleSheet
 } from 'react-native';
 
-var setTimeBlockPage = require('./timeBlock.ios'),
-    settingsPage = require('./settingsPage.ios'), 
-    Swiper = require('react-native-swiper'), 
-    statsPage = require('./profilePage.ios'), 
+var Swiper = require('react-native-swiper'),
     store = require('react-native-simple-store')
 // Uncomment to re-set stats
 
@@ -27,23 +18,9 @@ var setTimeBlockPage = require('./timeBlock.ios'),
 // store.delete('activities')
 
 
-class Main extends Component {
-
-  constructor() {
-    super();
-      this.state = {
-      fadeAnim: new Animated.Value(0),
-    };
-  }
+var Main = React.createClass ({
 
   componentDidMount() {
-    // Fade-in animation
-    Animated.timing(          
-       this.state.fadeAnim,   
-       {toValue: 1,
-        duration: 900},           
-     ).start()
-
     // Async Storage
     store.get('activities').then((data) => {
       if (data !== null){
@@ -73,125 +50,95 @@ class Main extends Component {
         store.save('totalCycles', 0)
       }
     });
-
-  }
-
-  GoToAboutApp() {
-    this.props.navigator.push({
-      title: 'About',
-      component: aboutAppPage
-    })
-  }
+  },
 
   GoToSetTimeBlock() {
     this.props.navigator.push({
       title: 'Set Time Block',
-      component: setTimeBlockPage
+      component: require('./timeBlock.ios')
     })
-  }
+  },
 
 	GoToSettings() {
 		this.props.navigator.push({
 			title: 'Settings',
-			component: settingsPage
+			component: require('./settingsPage.ios')
 		})
-	}
+	},
 
   GoToStats() {
     this.props.navigator.push({
       title: 'Statistics',
-      component: statsPage
+      component: require('./profilePage.ios')
     })
-  }
+  },
 
   render() {
     return (
-      <Animated.View style={[styles.container, {opacity: this.state.fadeAnim}]}>
-        <View style={styles.header}>
-        <Swiper style={styles.wrapper} height={225} horizontal={true} autoplay={false} showsPagination={true}>
+      <Animated.View style={styles.container}>
+        <View>
+          <Swiper height={225} horizontal={true} autoplay={true} showsPagination={true}>
             <Image source={require('../imgs/BreakTime.jpeg')} style={styles.backgroundImage} >
-            <Text style={styles.mainTitle}>
-              Break Time
-            </Text>
+              <Text style={[styles.alignBold, styles.mainTitle]}>Break Time</Text>
             </Image>
 
             <Image source={require('../imgs/bikeride.jpeg')} style={styles.backgroundImage} >
-            <Text style={styles.whiteText}>
-              Take better breaks.
-            </Text>
+              <Text style={[styles.alignBold, styles.whiteText]}>Take better breaks.</Text>
             </Image>
 
             <Image source={require('../imgs/productivity.jpg')} style={styles.backgroundImage} >
-            <Text style={styles.whiteText}>
-              Increase productivity.
-            </Text>
+              <Text style={[styles.alignBold, styles.whiteText]}>Increase productivity.</Text>
             </Image>
-        </Swiper>
+          </Swiper>
         </View>
-          <View style={styles.buttonsContainer}>
-          <TouchableHighlight
-            style={styles.button}
-            underlayColor={'#9BE8FF'}
-            onPress={() => this.GoToSetTimeBlock()}>
-            <Text style={styles.buttonText}>
-              Set Time Block
-            </Text>
-          </TouchableHighlight>
+          <View style={styles.buttonContainer}>
+            <TouchableHighlight
+              style={styles.button}
+              onPress={() => this.GoToSetTimeBlock()}>
+              <Text style={[styles.alignBold, styles.buttonText]}>Set Time Block</Text>
+            </TouchableHighlight>
 
-          <TouchableHighlight
-            style={styles.button}
-            underlayColor={'#9BE8FF'}
-            onPress={() => this.GoToStats()}>
-            <Text style={styles.buttonText}>
-              Timeboxing Stats
-            </Text>
-          </TouchableHighlight>
+            <TouchableHighlight
+              style={styles.button}
+              onPress={() => this.GoToStats()}>
+              <Text style={[styles.alignBold, styles.buttonText]}>Timeboxing Stats</Text>
+            </TouchableHighlight>
 
-          <TouchableHighlight
-            style={styles.button}
-            underlayColor={'#9BE8FF'}
-            onPress={() => this.GoToSettings()}>
-            <Text style={styles.buttonText}>
-              Activity Settings
-            </Text>
-          </TouchableHighlight>
+            <TouchableHighlight
+              style={styles.button}
+              onPress={() => this.GoToSettings()}>
+              <Text style={[styles.alignBold, styles.buttonText]}>Activity Settings</Text>
+            </TouchableHighlight>
           </View>
       </Animated.View>
     );
   }
-}
+})
 
-const styles = StyleSheet.create({
+var styles = StyleSheet.create({
+  alignBold: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 30
+  },
   container: {
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#F2F2F2'
   },
-  header: {
-    top: 0
-  },
-  mainTitle: {
-    fontSize: 30,
-    textAlign: 'center',
-    margin: 15,
-    fontWeight: 'bold',
+  backgroundImage: {
+    width: null,
+    height: null,
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center'
   },
   whiteText: {
-    textAlign: 'center',
-    fontSize: 30,
-    color: 'white',
-    fontWeight: 'bold',
+    color: 'white'
   },
-  buttonText: {
-    textAlign: 'center',
-    margin: 10,
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  aboutLink: {
-    textAlign: 'center',
+  buttonContainer: {
+    marginBottom: 25,
   },
   button: {
     backgroundColor: '#05B3DD',
@@ -204,32 +151,10 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 2
   },
-  buttonsContainer: {
-    marginBottom: 25,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  backgroundImage: {
-    width: null,
-    height: null,
-    flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center'
-  },
-  aboutButtonText: {
+  buttonText: {
+    margin: 10,
     fontSize: 20,
-    textDecorationLine: 'underline',
-  },
-  logo: {
-    height: 85,
-    width: 85,
-  },
-  logoContainer: {
-    marginTop: 10,
-    alignItems: 'center',
+    color: 'white'
   }
 });
 

@@ -1,20 +1,13 @@
 import React, {
-  Alert,
-  AppStateIOS,
-  AppRegistry,
-  Component,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  NavigatorIOS,
-  View,
+  // AppStateIOS, this is for when push notifications get added.
   Image,
+  View,
+  StyleSheet
 } from 'react-native';
 
 
 var CountDown = require('./timerlogic.ios'),
-    TimeBlock = require('./timeBlock.ios'),
-    exitTime
+    TimeBlock = require('./timeBlock.ios')
 
 var Timer = React.createClass ({
   render(){
@@ -23,7 +16,6 @@ var Timer = React.createClass ({
         <Image source={require('../imgs/coffeebreak.jpg')} style={styles.backgroundImage}>
           <View style={styles.container}>
             <CountDown
-              // text={"Remaining Time"}
               breakActivity={this.props.breakActivity}
               breakTime={this.props.breaktime}
               workTime={this.props.worktime}
@@ -39,35 +31,17 @@ var styles = StyleSheet.create({
   timerBackground: {
     flex: 1,
     justifyContent: 'space-around',
-    alignItems: 'center',
+    alignItems: 'center'
   },
   backgroundImage: {
     flex: 1,
-    resizeMode: 'contain',
+    resizeMode: 'contain'
   },
   container: {
     flex: 1,
     marginTop:60,
     justifyContent: 'center',
-    alignItems: 'center',
-  },
-  button: {
-    backgroundColor: '#05B3DD',
-    margin: 15,
-    borderRadius: 8.150,
-    width: 300,
-    height: 45,
-    shadowColor: 'black',
-    shadowOpacity: 0.5,
-    shadowOffset: {width: 0, height: 3},
-    shadowRadius: 2
-  },
-  buttonText: {
-    textAlign: 'center',
-    margin: 10,
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
+    alignItems: 'center'
   }
 });
 

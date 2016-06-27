@@ -1,108 +1,86 @@
 import React, {
-    Alert,
-    Image,
-    Text,
     View,
-    StyleSheet,
-    TextInput,
     TouchableHighlight,
-    TouchableWithoutFeedback,
-    NavigatorIOS,
-    Vibration
+    Text,
+    Alert,
+    Vibration,
+    StyleSheet
 } from 'react-native';
 
 var moment = require('moment'),
-    TimerMixin = require('react-timer-mixin'),
     AudioPlayer = require('react-native-audioplayer'),
-    StatsPage = require('./stats.ios'),
     alertBreakMessage = 'Now take a well deserved break.',
     alertWorkMessage = 'Want to start another timeblock?',
-    alertMessage = 'Confirm exit'
+    alertMessage = 'Confirm exit',
+    onBreak
 
 var CountDown = React.createClass({
-  mixins: [TimerMixin],
-
   getInitialState: function () {
     return {
-      workExpiry:  moment().add(this.props.worktime, 'seconds'),
-      breakExpiry: moment().add(this.props.breaktime, 'seconds'),
-      onBreak: false,
-      cycles: 0
+      cycles: 0,
+      time: this.props.workTime,
+      workExpiry: moment(),
+      breakExpiry: moment(),
+      onBreak: false
     };
   },
-
-  componentDidMount(){
-    this.interval = setInterval(function () {
-      this._onTick();
-    }.bind(this), 1000);
+  GoToMainPage() {
+    this.stopTimer()
+    this.props.navigator.popToTop()
   },
+  GoToStatsPage() {
+    this.props.navigator.push({
+      title: "Stats",
+      component: require('./stats.ios'),
+      navigationBarHidden: true,
+      passProps: {
+        worktime: this.props.workTime,
+        breaktime: this.props.breakTime,
+        breakActivity: this.props.breakActivity,
+        cycles: this.state.cycles,
+      }
+    })
+  },
+
+  //  componentDidMount(){
+  //   this.interval = setInterval(function () {
+  //     this._onTick();
+  //   }.bind(this), 1000);
+  // },
+
+  componentDidMount() {
+
+    this.setState({
+      workMin: workMin,
+      breakMin: breakMin,
+      // TESTING
+      // workExpiry: moment().add(workMin, 'seconds')
+      // NORMAL
+      workExpiry: moment().add(workMin, 'minutes')
+    })
+
+    this.startTimer();
+  },
+
+  startTimer(){
+    timeOn = setInterval(this._update, 1000);
+  },
+
+  // _update(){
+  //   this.checkTimer();
+  // },
+
+  // stopTimer(){
+  //   clearInterval(timeOn);
+  // },
 
   componentWillUnmount(){
     clearInterval(this.interval);
   },
-
-  _onTick() {
-    this.forceUpdate();
-    if (this.shouldSoundAlarm()){
-       this.alarm();
-    }
-  },
-
-  shouldSoundAlarm() {
-    return this.getExpiry('minutes') === 0 && this.getExpiry('seconds') === 0;
-  },
-
-  alarm(){
-    if (!this.state.alarm) {
-      Vibration.vibrate();
-      AudioPlayer.play('crabhorn.mp3');
-      if (!this.state.onBreak) {
-        Alert.alert('breaktitle', alertBreakMessage, [
-          {text: 'Take break', onPress: this.resetAlarm}
-        ]);
-      } else {
-        Alert.alert('worktitle', alertWorkMessage,
-          [ {text: 'Run another timeblock', onPress: this.resetAlarm},
-            {text: 'Finished', onPress: this.finish}
-          ]);
-      }
-      this.setState({alarm: true});
-    }
-  },
-
-  finish() {
-    this.setState({
-      cycles: this.state.cycles + 0.5
-    });
-    this.GoToStatsPage()
-  },
-
-  resetAlarm() {
-    this.setState({
-      cycles: this.state.cycles + 0.5,
-      alarm: false,
-      onBreak: !this.state.onBreak,
-      workExpiry: moment().add(this.props.worktime, 'seconds'),
-      breakExpiry: moment().add(this.props.breaktime, 'seconds')
-    });
-  },
-
-  getDuration(expiry) {
-    var milliseconds = expiry.diff(moment())
-    return moment.duration(milliseconds);
-  },
-
-  getTimeLeft(minOrSec, expiry) {
-    var timeLeft = this.getDuration(expiry);
-
-    if (timeLeft.asMinutes() < 0){
-      return 0;
-    } else if (minOrSec === 'seconds') {
-      return Math.floor(timeLeft.asSeconds() % 60)
-    } else {
-      return Math.floor(timeLeft.asMinutes())
-    }
-  },
+  // componentWillUnmount() {
+  //   this.stopTimer();
+  //   onBreak = false;
+  // },
 
   getExpiry(minOrSec) {
     if (this.state.onBreak) {
@@ -112,38 +90,6 @@ var CountDown = React.createClass({
     }
   },
 
-  GoToMainPage() {
-    this.stopTimer()
-    this.props.navigator.popToTop()
-  },
-
-  GoToStatsPage() {
-    this.props.navigator.push({
-      title: "Stats",
-      component: StatsPage,
-      navigationBarHidden: true,
-      passProps: {
-        worktime: this.props.worktime,
-        breaktime: this.props.breaktime,
-        breakActivity: this.props.breakActivity,
-        cycles: this.state.cycles
-
-      }
-    })
-  },
-
-  render(){
-    return (
-      <View>
-        <Text style={styles.text}>{this.props.text}: </Text>
-        <View style={[styles.wrapper,styles.buttonStyle]}>
-          {this.state.onBreak && <Text style={styles.textStyle}>{this.props.breakActivity}</Text>}
-          <Text style={styles.textStyle}>{this.getExpiry('minutes')} minutes </Text>
-          <Text style={styles.textStyle}>{this.getExpiry('seconds')} seconds</Text>
-        </View>
-      </View>
-    )
-  },
   setNewBlockCycle() {
 
     // TESTING TIMES
@@ -178,16 +124,7 @@ var CountDown = React.createClass({
         if (moment().format() >= this.state.breakExpiry.format()) {
           this.stopTimer();
           onBreak = false;
-          Vibration.vibrate();
-          AudioPlayer.play('crabhorn.mp3');
-          Alert.alert(
-            'You look so refreshed!',
-            alertWorkMessage,
-            [
-              {text: 'Run another timeblock', onPress: () => this.setNewBlockCycle()},
-              {text: 'Finished', onPress: () => this.finished()}
-            ]
-          );
+          alarm();
         } else {
           this.forceUpdate();
         }
@@ -196,16 +133,8 @@ var CountDown = React.createClass({
         if (moment().format() >= this.state.workExpiry.format()) {
           this.state.cycles++;
           onBreak = true;
-          Vibration.vibrate();
-          AudioPlayer.play('crabhorn.mp3');
+          alarm();
           this.stopTimer()
-          Alert.alert(
-            'Great job staying on task!',
-            alertBreakMessage,
-            [
-              {text: 'Take Break', onPress: () => this.setBreak()}
-            ]
-          );
         } else {
           this.forceUpdate();
         }
@@ -213,20 +142,18 @@ var CountDown = React.createClass({
     }
   },
   finished(){
-    var workMin = 1,
-        breakMin = 1;
-
     this.setState({
+      cycles: this.state.cycles + 0.5,
       workExpiry: moment().add(workMin, 'seconds'),
       breakExpiry: moment().add(breakMin, 'seconds')
     })
     this.GoToStatsPage();
   },
-  
   setBreak(){
     this.setState({
       // TESTING
       breakExpiry: moment().add(this.state.breakMin, 'seconds')
+
       // NORMAL
       // breakExpiry: moment().add(this.state.breakMin, 'minutes')
     }),
@@ -234,34 +161,55 @@ var CountDown = React.createClass({
     this.checkTimer()
   },
 
-  _update(){
-    this.checkTimer();
+  shouldSoundAlarm() {
+    return this.getExpiry('minutes') === 0 && this.getExpiry('seconds') === 0;
   },
-  
-  startTimer(){
-    timeOn = setInterval(this._update, 1000);
-  },
-
-  stopTimer(){
-    clearInterval(timeOn);
+   _onTick() {
+    this.forceUpdate();
+    if (this.shouldSoundAlarm()){
+       this.alarm();
+    }
   },
 
-  componentWillUnmount() {
-    this.stopTimer();
-    onBreak = false;
+  alarm(){
+    if (!this.state.alarm) {
+      Vibration.vibrate();
+      AudioPlayer.play('crabhorn.mp3');
+      if (this.state.onBreak) {
+        Alert.alert(
+            'You look so refreshed!',
+            alertWorkMessage,
+            [
+              {text: 'Run another timeblock', onPress: () => this.setNewBlockCycle()},
+              {text: 'Finished', onPress: () => this.finished()}
+            ])
+      } else {
+        Alert.alert(
+          'Great job staying on task!',
+          alertBreakMessage,
+            [
+              {text: 'Take Break', onPress: () => this.setBreak()}
+            ]);
+      }
+      this.setState({alarm: true});
+    }
   },
 
-  getTimeToWorkExpiry() {
-    return this.getTimeLeft(this.state.workExpiry);
-  },
 
-  getTimeToBreakExpiry() {
-    return this.getTimeLeft(this.state.breakExpiry);
-  },
+  getTimeLeft(minOrSec, expiry) {
+    var timeLeft = this.getDuration(expiry);
 
-  getTimeLeft(expiry) {
-    var milliseconds = expiry.diff(moment());
-    return moment.duration(milliseconds)
+    if (timeLeft.asMinutes() < 0){
+      return 0;
+    } else if (minOrSec === 'seconds') {
+      return Math.floor(timeLeft.asSeconds() % 60)
+    } else {
+      return Math.floor(timeLeft.asMinutes())
+    }
+  },
+  getDuration: function(expiry) {
+    var milliseconds = expiry.diff(moment())
+    return moment.duration(milliseconds);
   },
   renderStop() {
     return (
@@ -277,10 +225,20 @@ var CountDown = React.createClass({
             {text: 'No', onPress: () => console.log('no')}
           ]
           )}>
-        <Text style={styles.buttonText}>
-          Stop
-        </Text>
+        <Text style={styles.buttonText}>Stop</Text>
       </TouchableHighlight>
+      </View>
+    )
+  },
+  render(){
+    return (
+      <View>
+        <Text style={styles.text}>{this.props.text}: </Text>
+        <View style={[styles.wrapper,styles.buttonStyle]}>
+          {this.state.onBreak && <Text style={styles.textStyle}>{this.props.breakActivity}</Text>}
+          <Text style={styles.textStyle}>{this.getExpiry('minutes')} minutes </Text>
+          <Text style={styles.textStyle}>{this.getExpiry('seconds')} seconds</Text>
+        </View>
       </View>
     )
   },
@@ -335,3 +293,5 @@ var styles = StyleSheet.create({
 });
 
 module.exports = CountDown;
+
+
