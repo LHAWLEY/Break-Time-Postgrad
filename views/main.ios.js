@@ -37,13 +37,6 @@ class Main extends Component {
   }
 
   componentDidMount() {
-    // Fade-in animation
-    Animated.timing(
-       this.state.fadeAnim,
-       {toValue: 1,
-        duration: 900},
-     ).start()
-
     // Async Storage
     store.get('activities').then((data) => {
       if (data !== null){
