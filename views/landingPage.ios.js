@@ -9,14 +9,12 @@ import React, {
   Image
 } from 'react-native';
 
-var Main = require('./main.ios')
-
 var LandingPage = React.createClass({
 
 	GoToMain() {
 		this.props.navigator.resetTo({
       title: 'Main',
-      component: Main
+      component: require('./main.ios')
     })
 	},
 

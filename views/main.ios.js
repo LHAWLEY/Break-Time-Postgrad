@@ -13,10 +13,7 @@ import React, {
   ScrollView,
 } from 'react-native';
 
-var setTimeBlockPage = require('./timeBlock.ios'),
-    settingsPage = require('./settingsPage.ios'),
-    Swiper = require('react-native-swiper'),
-    statsPage = require('./profilePage.ios'),
+var Swiper = require('react-native-swiper'),
     store = require('react-native-simple-store')
 // Uncomment to re-set stats
 
@@ -28,13 +25,6 @@ var setTimeBlockPage = require('./timeBlock.ios'),
 
 
 class Main extends Component {
-
-  constructor() {
-    super();
-      this.state = {
-      fadeAnim: new Animated.Value(0),
-    };
-  }
 
   componentDidMount() {
     // Async Storage
@@ -66,27 +56,26 @@ class Main extends Component {
         store.save('totalCycles', 0)
       }
     });
-
   }
 
   GoToSetTimeBlock() {
     this.props.navigator.push({
       title: 'Set Time Block',
-      component: setTimeBlockPage
+      component: require('./timeBlock.ios')
     })
   }
 
 	GoToSettings() {
 		this.props.navigator.push({
 			title: 'Settings',
-			component: settingsPage
+			component: require('./settingsPage.ios')
 		})
 	}
 
   GoToStats() {
     this.props.navigator.push({
       title: 'Statistics',
-      component: statsPage
+      component: require('./profilePage.ios')
     })
   }
 
@@ -96,39 +85,36 @@ class Main extends Component {
         <View>
           <Swiper height={225} horizontal={true} autoplay={true} showsPagination={true}>
             <Image source={require('../imgs/BreakTime.jpeg')} style={styles.backgroundImage} >
-              <Text style={styles.mainTitle}>Break Time</Text>
+              <Text style={[styles.alignBold, styles.mainTitle]}>Break Time</Text>
             </Image>
 
             <Image source={require('../imgs/bikeride.jpeg')} style={styles.backgroundImage} >
-              <Text style={styles.whiteText}>Take better breaks.</Text>
+              <Text style={[styles.alignBold, styles.whiteText]}>Take better breaks.</Text>
             </Image>
 
             <Image source={require('../imgs/productivity.jpg')} style={styles.backgroundImage} >
-              <Text style={styles.whiteText}>Increase productivity.</Text>
+              <Text style={[styles.alignBold, styles.whiteText]}>Increase productivity.</Text>
             </Image>
           </Swiper>
         </View>
           <View style={styles.buttonContainer}>
-          <TouchableHighlight
-            style={styles.button}
-            underlayColor={'#9BE8FF'}
-            onPress={() => this.GoToSetTimeBlock()}>
-            <Text style={styles.buttonText}>Set Time Block</Text>
-          </TouchableHighlight>
+            <TouchableHighlight
+              style={styles.button}
+              onPress={() => this.GoToSetTimeBlock()}>
+              <Text style={[styles.alignBold, styles.buttonText]}>Set Time Block</Text>
+            </TouchableHighlight>
 
-          <TouchableHighlight
-            style={styles.button}
-            underlayColor={'#9BE8FF'}
-            onPress={() => this.GoToStats()}>
-            <Text style={styles.buttonText}>Timeboxing Stats</Text>
-          </TouchableHighlight>
+            <TouchableHighlight
+              style={styles.button}
+              onPress={() => this.GoToStats()}>
+              <Text style={[styles.alignBold, styles.buttonText]}>Timeboxing Stats</Text>
+            </TouchableHighlight>
 
-          <TouchableHighlight
-            style={styles.button}
-            underlayColor={'#9BE8FF'}
-            onPress={() => this.GoToSettings()}>
-            <Text style={styles.buttonText}>Activity Settings</Text>
-          </TouchableHighlight>
+            <TouchableHighlight
+              style={styles.button}
+              onPress={() => this.GoToSettings()}>
+              <Text style={[styles.alignBold, styles.buttonText]}>Activity Settings</Text>
+            </TouchableHighlight>
           </View>
       </Animated.View>
     );
@@ -136,11 +122,16 @@ class Main extends Component {
 }
 
 var styles = StyleSheet.create({
+  alignBold: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 30
+  },
   container: {
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#F2F2F2',
+    backgroundColor: '#F2F2F2'
   },
   backgroundImage: {
     width: null,
@@ -149,17 +140,8 @@ var styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center'
   },
-  mainTitle: {
-    fontSize: 30,
-    textAlign: 'center',
-    margin: 15,
-    fontWeight: 'bold',
-  },
   whiteText: {
-    textAlign: 'center',
-    fontSize: 30,
-    color: 'white',
-    fontWeight: 'bold',
+    color: 'white'
   },
   buttonContainer: {
     marginBottom: 25,
@@ -176,11 +158,9 @@ var styles = StyleSheet.create({
     shadowRadius: 2
   },
   buttonText: {
-    textAlign: 'center',
     margin: 10,
     fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
+    color: 'white'
   }
 });
 
