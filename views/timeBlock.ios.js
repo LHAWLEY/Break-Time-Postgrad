@@ -197,7 +197,7 @@ var TimeBlock = React.createClass({
   }
 })
 
-const styles = StyleSheet.create({
+var styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
   customOptions: {
     marginTop: 30,
   },
-  
+
   footer: {
     flex: 1,
     fontSize: 25,

@@ -17,7 +17,7 @@ var moment = require('moment'),
     StatsPage = require('./stats.ios'),
     alertBreakMessage = 'Now take a well deserved break.',
     alertWorkMessage = 'Want to start another timeblock?',
-    alertMessage = 'Confirm exit', 
+    alertMessage = 'Confirm exit',
     onBreak
 
 var CountDown = React.createClass({
@@ -57,7 +57,7 @@ var CountDown = React.createClass({
   // },
 
   componentDidMount() {
-    
+
     // TESTING TIMES
     // var workMin = 5,
     //     breakMin = 3;
@@ -211,7 +211,7 @@ var CountDown = React.createClass({
     }
   },
 
- 
+
   getTimeLeft(minOrSec, expiry) {
     var timeLeft = this.getDuration(expiry);
 

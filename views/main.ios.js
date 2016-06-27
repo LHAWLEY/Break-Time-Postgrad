@@ -14,9 +14,9 @@ import React, {
 } from 'react-native';
 
 var setTimeBlockPage = require('./timeBlock.ios'),
-    settingsPage = require('./settingsPage.ios'), 
-    Swiper = require('react-native-swiper'), 
-    statsPage = require('./profilePage.ios'), 
+    settingsPage = require('./settingsPage.ios'),
+    Swiper = require('react-native-swiper'),
+    statsPage = require('./profilePage.ios'),
     store = require('react-native-simple-store')
 // Uncomment to re-set stats
 
@@ -38,10 +38,10 @@ class Main extends Component {
 
   componentDidMount() {
     // Fade-in animation
-    Animated.timing(          
-       this.state.fadeAnim,   
+    Animated.timing(
+       this.state.fadeAnim,
        {toValue: 1,
-        duration: 900},           
+        duration: 900},
      ).start()
 
     // Async Storage
@@ -76,13 +76,6 @@ class Main extends Component {
 
   }
 
-  GoToAboutApp() {
-    this.props.navigator.push({
-      title: 'About',
-      component: aboutAppPage
-    })
-  }
-
   GoToSetTimeBlock() {
     this.props.navigator.push({
       title: 'Set Time Block',
@@ -106,54 +99,42 @@ class Main extends Component {
 
   render() {
     return (
-      <Animated.View style={[styles.container, {opacity: this.state.fadeAnim}]}>
-        <View style={styles.header}>
-        <Swiper style={styles.wrapper} height={225} horizontal={true} autoplay={false} showsPagination={true}>
+      <Animated.View style={styles.container}>
+        <View>
+          <Swiper height={225} horizontal={true} autoplay={true} showsPagination={true}>
             <Image source={require('../imgs/BreakTime.jpeg')} style={styles.backgroundImage} >
-            <Text style={styles.mainTitle}>
-              Break Time
-            </Text>
+              <Text style={styles.mainTitle}>Break Time</Text>
             </Image>
 
             <Image source={require('../imgs/bikeride.jpeg')} style={styles.backgroundImage} >
-            <Text style={styles.whiteText}>
-              Take better breaks.
-            </Text>
+              <Text style={styles.whiteText}>Take better breaks.</Text>
             </Image>
 
             <Image source={require('../imgs/productivity.jpg')} style={styles.backgroundImage} >
-            <Text style={styles.whiteText}>
-              Increase productivity.
-            </Text>
+              <Text style={styles.whiteText}>Increase productivity.</Text>
             </Image>
-        </Swiper>
+          </Swiper>
         </View>
-          <View style={styles.buttonsContainer}>
+          <View style={styles.buttonContainer}>
           <TouchableHighlight
             style={styles.button}
             underlayColor={'#9BE8FF'}
             onPress={() => this.GoToSetTimeBlock()}>
-            <Text style={styles.buttonText}>
-              Set Time Block
-            </Text>
+            <Text style={styles.buttonText}>Set Time Block</Text>
           </TouchableHighlight>
 
           <TouchableHighlight
             style={styles.button}
             underlayColor={'#9BE8FF'}
             onPress={() => this.GoToStats()}>
-            <Text style={styles.buttonText}>
-              Timeboxing Stats
-            </Text>
+            <Text style={styles.buttonText}>Timeboxing Stats</Text>
           </TouchableHighlight>
 
           <TouchableHighlight
             style={styles.button}
             underlayColor={'#9BE8FF'}
             onPress={() => this.GoToSettings()}>
-            <Text style={styles.buttonText}>
-              Activity Settings
-            </Text>
+            <Text style={styles.buttonText}>Activity Settings</Text>
           </TouchableHighlight>
           </View>
       </Animated.View>
@@ -161,15 +142,19 @@ class Main extends Component {
   }
 }
 
-const styles = StyleSheet.create({
+var styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#F2F2F2',
   },
-  header: {
-    top: 0
+  backgroundImage: {
+    width: null,
+    height: null,
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center'
   },
   mainTitle: {
     fontSize: 30,
@@ -183,15 +168,8 @@ const styles = StyleSheet.create({
     color: 'white',
     fontWeight: 'bold',
   },
-  buttonText: {
-    textAlign: 'center',
-    margin: 10,
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  aboutLink: {
-    textAlign: 'center',
+  buttonContainer: {
+    marginBottom: 25,
   },
   button: {
     backgroundColor: '#05B3DD',
@@ -204,32 +182,12 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 3},
     shadowRadius: 2
   },
-  buttonsContainer: {
-    marginBottom: 25,
-  },
-  instructions: {
+  buttonText: {
     textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-  backgroundImage: {
-    width: null,
-    height: null,
-    flex: 1,
-    resizeMode: 'cover',
-    justifyContent: 'center'
-  },
-  aboutButtonText: {
+    margin: 10,
     fontSize: 20,
-    textDecorationLine: 'underline',
-  },
-  logo: {
-    height: 85,
-    width: 85,
-  },
-  logoContainer: {
-    marginTop: 10,
-    alignItems: 'center',
+    fontWeight: 'bold',
+    color: 'white',
   }
 });
 

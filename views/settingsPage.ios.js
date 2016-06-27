@@ -82,10 +82,10 @@ var Settings = React.createClass ({
             <TextInput
               ref={'textInput'}
               style={styles.searchInput}
-              onChangeText={(text) => this.setState({text})} 
+              onChangeText={(text) => this.setState({text})}
               placeholder={this.state.text}/>
-            <TouchableHighlight style={styles.addButton} 
-              underlayColor={'#C0C0C0'} 
+            <TouchableHighlight style={styles.addButton}
+              underlayColor={'#C0C0C0'}
               onPress={() => this.saveData(this.state.text)}>
               <Text style={styles.buttonText2}>+</Text>
             </TouchableHighlight>
@@ -96,9 +96,9 @@ var Settings = React.createClass ({
               {activities}
             </View>
           </ScrollView>
-          <TouchableHighlight 
-            style={styles.button2} 
-            underlayColor={'#9BE8FF'} 
+          <TouchableHighlight
+            style={styles.button2}
+            underlayColor={'#9BE8FF'}
             onPress={() => this.popToTop()}>
             <Text style={styles.buttonText2}>
               Main Page
@@ -109,7 +109,7 @@ var Settings = React.createClass ({
     }
   });
 
-const styles = StyleSheet.create({
+var styles = StyleSheet.create({
   settingsBackground: {
     flex: 1,
     justifyContent: 'space-around',
