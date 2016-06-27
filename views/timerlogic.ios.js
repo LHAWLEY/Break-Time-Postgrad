@@ -1,28 +1,20 @@
 import React, {
-    Alert,
-    Image,
-    Text,
     View,
-    StyleSheet,
-    TextInput,
     TouchableHighlight,
-    TouchableWithoutFeedback,
-    NavigatorIOS,
-    Vibration
+    Text,
+    Alert,
+    Vibration,
+    StyleSheet
 } from 'react-native';
 
 var moment = require('moment'),
-    TimerMixin = require('react-timer-mixin'),
     AudioPlayer = require('react-native-audioplayer'),
-    StatsPage = require('./stats.ios'),
     alertBreakMessage = 'Now take a well deserved break.',
     alertWorkMessage = 'Want to start another timeblock?',
     alertMessage = 'Confirm exit',
     onBreak
 
 var CountDown = React.createClass({
-  mixins: [TimerMixin],
-
   getInitialState: function () {
     return {
       cycles: 0,
@@ -39,7 +31,7 @@ var CountDown = React.createClass({
   GoToStatsPage() {
     this.props.navigator.push({
       title: "Stats",
-      component: StatsPage,
+      component: require('./stats.ios'),
       navigationBarHidden: true,
       passProps: {
         worktime: this.props.workTime,
@@ -57,14 +49,6 @@ var CountDown = React.createClass({
   // },
 
   componentDidMount() {
-
-    // TESTING TIMES
-    // var workMin = 5,
-    //     breakMin = 3;
-
-    // // NORMAL TIMES
-    var workMin = this.props.workTime,
-        breakMin = this.props.breakTime;
 
     this.setState({
       workMin: workMin,
@@ -241,9 +225,7 @@ var CountDown = React.createClass({
             {text: 'No', onPress: () => console.log('no')}
           ]
           )}>
-        <Text style={styles.buttonText}>
-          Stop
-        </Text>
+        <Text style={styles.buttonText}>Stop</Text>
       </TouchableHighlight>
       </View>
     )

@@ -8,11 +8,6 @@ import React, {
   NavigatorIOS
 } from 'react-native';
 
-// var Main = require('./views/main.ios');
-var LandingPage = require('./views/landingPage.ios')
-// var Timer = require('./views/timer.ios')
-// var Stats = require('./views/stats.ios')
-// var Settings = require('./views/settingsPage.ios')
 
 class BreakTime extends Component {
   render() {
@@ -22,7 +17,7 @@ class BreakTime extends Component {
         initialRoute={{
           title: 'Main',
           navigationBarHidden: true,
-          component: LandingPage
+          component: require('./views/landingPage.ios')
       }}/>
     );
   }

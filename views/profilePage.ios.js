@@ -1,13 +1,9 @@
 import React, {
-  ScrollView,
-  AsyncStorage,
-  AppRegistry,
-  Component,
-  StyleSheet,
   Text,
   View,
   Image,
-  TouchableHighlight,
+  ScrollView,
+  StyleSheet,
 } from 'react-native';
 
 var Swiper = require('react-native-swiper'),

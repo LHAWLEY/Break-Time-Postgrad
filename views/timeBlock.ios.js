@@ -1,26 +1,19 @@
 import React, {
-  ScrollView,
-  AsyncStorage,
-  Animated,
-  Component,
-  StyleSheet,
-  Text,
-  View,
-  TouchableHighlight,
   Picker,
+  ScrollView,
+  View,
+  Animated,
+  Text,
   Image,
-  NavigatorIOS
+  TouchableHighlight,
+  StyleSheet
 } from 'react-native';
 
-var moment = require('moment'),
-    store = require('react-native-simple-store'),
-    TimePicker = require('./components/timePicker.ios'),
-    Button = require('./components/button.ios'),
+var store = require('react-native-simple-store'),
     Swiper = require('react-native-swiper'),
-    TimerPage = require('./timer.ios'),
     TimerLogicPage = require('./timerlogic.ios'),
     ScrollableTabView = require('react-native-scrollable-tab-view'),
-    indexContainer = [],
+    activitiesList = [],
     activityData
 
 var TimeBlock = React.createClass({
@@ -30,18 +23,12 @@ var TimeBlock = React.createClass({
       this.setState({activities: data, breakActivity: data[0]});
       activityData = data;
     });
-
-    Animated.timing(
-       this.state.fadeAnim,
-       {toValue: 1,
-        duration: 3000},
-     ).start()
   },
 
   GoToTimerPage() {
     this.props.navigator.push({
       title: "Timer",
-      component: TimerPage,
+      component: require('./timer.ios'),
       passProps: {
         worktime: parseInt(this.state.worktime),
         breaktime: parseInt(this.state.breaktime),
@@ -52,12 +39,6 @@ var TimeBlock = React.createClass({
 
   getInitialState() {
     return {
-      fadeAnim: new Animated.Value(0),
-
-      // TESTING TIMES
-      // worktime: '5',
-      // breaktime: '3',
-
       // NORMAL TIMES
       worktime: '15',
       breaktime: '5',
@@ -89,108 +70,90 @@ var TimeBlock = React.createClass({
 
   render() {
     if (this.state.activities !== undefined) {
-      var activitiesList = this.state.activities.map(function(activity, i) {
+      activitiesList = this.state.activities.map(function(activity, i) {
         return(
           <Picker.Item key={i} label={activity} value={activity} />
         )
       })
     } else {
-      var activitiesList = []
+      activitiesList = []
     }
     return (
 
-    <ScrollView style={styles.wrapper1} bounces={true} horizontal={false}>
+    <ScrollView bounces={true} horizontal={false}>
       <View style={styles.container}>
-        <Swiper style={styles.wrapper} height={275} horizontal={true} autoplay={false} showsPagination={true}>
+        <Swiper height={275} horizontal={true} autoplay={true} showsPagination={true}>
             <Image source={require('../imgs/wide-workstation.jpg')} style={styles.backgroundImage} >
-              <Text style={styles.whiteText}>
-                work.
-              </Text>
+              <Text style={styles.whiteText}>work.</Text>
             </Image>
+
             <Image source={require('../imgs/run.jpeg')} style={styles.backgroundImage} >
-              <Text style={styles.whiteText}>
-                run.
-              </Text>
+              <Text style={styles.whiteText}>run.</Text>
             </Image>
 
             <Image source={require('../imgs/yoga.jpg')} style={styles.backgroundImage} >
-              <Text style={styles.whiteText}>
-                do yoga.
-              </Text>
+              <Text style={styles.whiteText}>do yoga.</Text>
             </Image>
 
             <Image source={require('../imgs/music.jpg')} style={styles.backgroundImage} >
-              <Text style={styles.whiteText}>
-                play music.
-              </Text>
+              <Text style={styles.whiteText}>play music.</Text>
             </Image>
 
             <Image source={require('../imgs/snackbreak.jpg')} style={styles.backgroundImage} >
-              <Text style={styles.whiteText}>
-                eat snacks.
-              </Text>
+              <Text style={styles.whiteText}>eat snacks.</Text>
             </Image>
         </Swiper>
       </View>
 
-      <View style={styles.timeContainer}>
-        <Swiper style={styles.wrapper} showsButtons={true} height={300} horizontal={true} index={this.state.index} loop={false}>
-        <View style={styles.container}>
-          <Text style={styles.description}>
-            1. Set Work Time Block
-          </Text>
-        <Picker
-          style={styles.picker}
-          selectedValue={this.state.worktime}
-          onValueChange={this.updateWorktime}>
-          <Picker.Item label='15 Minutes' value='15' />
-          <Picker.Item label='25 Minutes' value='25' />
-          <Picker.Item label='30 Minutes' value='30' />
-          <Picker.Item label='45 Minutes' value='45' />
-          <Picker.Item label='60 Minutes' value='60' />
-        </Picker>
-        </View>
-        <View style={styles.container}>
-        <Text style={styles.description}>
-          2. Set Break Time Block
-        </Text>
-        <Picker
-          style={styles.picker}
-          selectedValue={this.state.breaktime}
-          onValueChange={this.updateBreaktime}>
-          <Picker.Item label='5 Minutes' value='5' />
-          <Picker.Item label='10 Minutes' value='10' />
-          <Picker.Item label='15 Minutes' value='15' />
-          <Picker.Item label='20 Minutes' value='20' />
-        </Picker>
-        </View>
-        <View style={styles.container}>
-          <Text style={styles.description}>
-            3. Choose a break activity
-          </Text>
-          <Picker
-            style={styles.picker}
-            selectedValue={this.state.breakActivity}
-            onValueChange={this.updateBreakActivity}>
-            {activitiesList}
-          </Picker>
-        </View>
+      <View style={styles.container}>
+        <Swiper showsButtons={true} height={300} horizontal={true} index={this.state.index} loop={false}>
+          <View style={styles.container}>
+            <Text style={styles.description}>1. Set Work Time Block</Text>
+            <Picker
+              style={styles.picker}
+              selectedValue={this.state.worktime}
+              onValueChange={this.updateWorktime}>
+              <Picker.Item label='15 Minutes' value='15' />
+              <Picker.Item label='25 Minutes' value='25' />
+              <Picker.Item label='30 Minutes' value='30' />
+              <Picker.Item label='45 Minutes' value='45' />
+              <Picker.Item label='60 Minutes' value='60' />
+            </Picker>
+          </View>
+          <View style={styles.container}>
+            <Text style={styles.description}>2. Set Break Time Block</Text>
+            <Picker
+              style={styles.picker}
+              selectedValue={this.state.breaktime}
+              onValueChange={this.updateBreaktime}>
+              <Picker.Item label='5 Minutes' value='5' />
+              <Picker.Item label='10 Minutes' value='10' />
+              <Picker.Item label='15 Minutes' value='15' />
+              <Picker.Item label='20 Minutes' value='20' />
+            </Picker>
+          </View>
+          <View style={styles.container}>
+            <Text style={styles.description}>3. Choose a break activity</Text>
+            <Picker
+              style={styles.picker}
+              selectedValue={this.state.breakActivity}
+              onValueChange={this.updateBreakActivity}>
+              {activitiesList}
+            </Picker>
+          </View>
 
-        <View style={styles.buttonContainer}>
-          <Text style={styles.description1}>
-            4. Start your timebox cycle
-          </Text>
-          <TouchableHighlight
-            style={styles.button}
-            underlayColor='#9BE8FF'
-            onPress={() => this.GoToTimerPage()}>
-            <Text style={styles.buttonText}>
-              Start
-            </Text>
-          </TouchableHighlight>
-        </View>
+          <View style={styles.container}>
+            <Text style={[styles.description, styles.startDescription]}>4. Start your timebox cycle</Text>
+            <TouchableHighlight
+              style={styles.button}
+              underlayColor='#9BE8FF'
+              onPress={() => this.GoToTimerPage()}>
+              <Text style={styles.buttonText}>
+                Start
+              </Text>
+            </TouchableHighlight>
+          </View>
         </Swiper>
-
       </View>
     </ScrollView>
     );
@@ -202,37 +165,17 @@ var styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor: '#F5FCFF'
   },
-
-  buttonContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-
-  timeContainer: {
-    padding: 10,
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-
   description: {
     textAlign: 'center',
-    fontSize: 25,
+    fontSize: 25
   },
-
-  description1: {
-    textAlign: 'center',
-    fontSize: 25,
+  startDescription: {
     position: 'absolute',
     top: 27,
-    paddingLeft: 40,
+    paddingLeft: 40
   },
-
   button: {
     backgroundColor: '#05B3DD',
     borderRadius: 8.150,
@@ -241,33 +184,18 @@ var styles = StyleSheet.create({
     shadowColor: 'black',
     shadowOpacity: 0.3,
     shadowOffset: {width: 0, height: 3},
-    shadowRadius: 2,
+    shadowRadius: 2
     },
-
   buttonText: {
     textAlign: 'center',
     margin: 10,
     fontSize: 20,
     fontWeight: 'bold',
-    color: 'white',
+    color: 'white'
   },
-
-  buttonOff: {
-    backgroundColor: '#BCC1C5',
-    margin:15,
-    borderRadius: 8.150,
-    width: 300,
-    height: 45,
-    shadowColor: 'black',
-    shadowOpacity: 0.3,
-    shadowOffset: {width: 0, height: 3},
-    shadowRadius: 2
-    },
-
   picker: {
     width: 300
   },
-
   backgroundImage: {
     width: null,
     height: null,
@@ -275,28 +203,12 @@ var styles = StyleSheet.create({
     resizeMode: 'cover',
     justifyContent: 'center'
   },
-
   whiteText: {
     textAlign: 'center',
     fontSize: 30,
     fontWeight: 'bold',
-    color: 'white',
-  },
-
-  background: {
-    backgroundColor: '#F5FCFF',
-  },
-
-  customOptions: {
-    marginTop: 30,
-  },
-
-  footer: {
-    flex: 1,
-    fontSize: 25,
-    textAlign: 'center',
-    backgroundColor: '#BCC1C5',
-  },
+    color: 'white'
+  }
 });
 
 module.exports = TimeBlock;

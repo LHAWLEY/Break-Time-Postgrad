@@ -1,14 +1,9 @@
 import React, {
-  AppRegistry,
-  AsyncStorage,
-  Animated,
-  Component,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
   View,
-  NavigatorIOS,
   Image,
+  Text,
+  TouchableHighlight,
+  StyleSheet
 } from 'react-native';
 
 var profilePage = require('./profilePage.ios'),
@@ -19,27 +14,7 @@ var profilePage = require('./profilePage.ios'),
 
 var Stats = React.createClass({
 
-  // constructor(props) {
-  //   super(props);
-  //     this.state = {
-  //     fadeAnim: new Animated.Value(0),
-  //   };
-  // }
-
-  // getInitialState() {
-  //   return {
-  //     fadeAnim: new Animated.Value(0),
-  //   };
-  // }
-
   componentDidMount(){
-    // Fade-in animation
-    // Animated.timing(
-    //    this.state.fadeAnim,
-    //    {toValue: 1,
-    //     delay: 1500,
-    //     duration: 900},
-    //  ).start();
 
     store.get('totalTimeWorked').then((data) => {
       var newTotal = data += Math.floor((this.props.worktime * this.props.cycles))

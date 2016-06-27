@@ -1,12 +1,9 @@
 import React, {
-  AppRegistry,
-  Component,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  View,
   TouchableWithoutFeedback,
-  Image
+  View,
+  Image,
+  Text,
+  StyleSheet
 } from 'react-native';
 
 var LandingPage = React.createClass({

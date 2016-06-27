@@ -1,16 +1,10 @@
 import React, {
-  Alert,
-  AsyncStorage,
-  AppRegistry,
   Animated,
-  Component,
-  StyleSheet,
-  TouchableHighlight,
-  Text,
-  Image,
   View,
-  NavigatorIOS,
-  ScrollView,
+  Image,
+  Text,
+  TouchableHighlight,
+  StyleSheet
 } from 'react-native';
 
 var Swiper = require('react-native-swiper'),
@@ -24,7 +18,7 @@ var Swiper = require('react-native-swiper'),
 // store.delete('activities')
 
 
-class Main extends Component {
+var Main = React.createClass ({
 
   componentDidMount() {
     // Async Storage
@@ -56,28 +50,28 @@ class Main extends Component {
         store.save('totalCycles', 0)
       }
     });
-  }
+  },
 
   GoToSetTimeBlock() {
     this.props.navigator.push({
       title: 'Set Time Block',
       component: require('./timeBlock.ios')
     })
-  }
+  },
 
 	GoToSettings() {
 		this.props.navigator.push({
 			title: 'Settings',
 			component: require('./settingsPage.ios')
 		})
-	}
+	},
 
   GoToStats() {
     this.props.navigator.push({
       title: 'Statistics',
       component: require('./profilePage.ios')
     })
-  }
+  },
 
   render() {
     return (
@@ -119,7 +113,7 @@ class Main extends Component {
       </Animated.View>
     );
   }
-}
+})
 
 var styles = StyleSheet.create({
   alignBold: {
